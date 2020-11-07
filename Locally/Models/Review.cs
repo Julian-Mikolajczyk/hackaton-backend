@@ -8,16 +8,16 @@ namespace Locally.Models
         public Review()
         {
             PhotosReview = new HashSet<PhotosReview>();
-            Service = new HashSet<Service>();
         }
 
         public int UserId { get; set; }
         public int Id { get; set; }
         public string Comment { get; set; }
         public int Rating { get; set; }
+        public int ServiceId { get; set; }
 
+        public virtual Service Service { get; set; }
         public virtual User User { get; set; }
         public virtual ICollection<PhotosReview> PhotosReview { get; set; }
-        public virtual ICollection<Service> Service { get; set; }
     }
 }

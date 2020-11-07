@@ -31,7 +31,6 @@ namespace Locally.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer("Data source=db-mssql;Initial Catalog=2019SBD;Integrated Security=True");
             }
         }
@@ -48,7 +47,7 @@ namespace Locally.Models
 
                 entity.Property(e => e.Content)
                     .IsRequired()
-                    .HasMaxLength(1);
+                    .HasMaxLength(1024);
 
                 entity.Property(e => e.ServiceId).HasColumnName("Service_ID");
 
@@ -83,7 +82,7 @@ namespace Locally.Models
 
                 entity.Property(e => e.Path)
                     .IsRequired()
-                    .HasMaxLength(1);
+                    .HasMaxLength(1024);
             });
 
             modelBuilder.Entity<PhotosReview>(entity =>
@@ -143,17 +142,17 @@ namespace Locally.Models
 
                 entity.Property(e => e.Name)
                     .IsRequired()
-                    .HasMaxLength(1);
+                    .HasMaxLength(1024);
 
                 entity.Property(e => e.Phone)
                     .IsRequired()
-                    .HasMaxLength(1);
+                    .HasMaxLength(1024);
 
                 entity.Property(e => e.PhotoId).HasColumnName("Photo_ID");
 
                 entity.Property(e => e.Surname)
                     .IsRequired()
-                    .HasMaxLength(1);
+                    .HasMaxLength(1024);
 
                 entity.HasOne(d => d.Photo)
                     .WithMany(p => p.Profile)
@@ -197,9 +196,17 @@ namespace Locally.Models
                     .HasColumnName("ID")
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.Comment).HasMaxLength(1);
+                entity.Property(e => e.Comment).HasMaxLength(1024);
+
+                entity.Property(e => e.ServiceId).HasColumnName("Service_ID");
 
                 entity.Property(e => e.UserId).HasColumnName("User_ID");
+
+                entity.HasOne(d => d.Service)
+                    .WithMany(p => p.Review)
+                    .HasForeignKey(d => d.ServiceId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Review_Service");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Review)
@@ -216,15 +223,17 @@ namespace Locally.Models
 
                 entity.Property(e => e.Description)
                     .IsRequired()
-                    .HasMaxLength(1);
+                    .HasMaxLength(1024);
 
                 entity.Property(e => e.Location)
                     .IsRequired()
-                    .HasMaxLength(1);
+                    .HasMaxLength(1024);
 
                 entity.Property(e => e.PreApprovedUserId).HasColumnName("PreApproved_User_ID");
 
-                entity.Property(e => e.ReviewId).HasColumnName("Review_ID");
+                entity.Property(e => e.Title)
+                    .IsRequired()
+                    .HasMaxLength(1024);
 
                 entity.Property(e => e.UserContractor).HasColumnName("User_Contractor");
 
@@ -234,11 +243,6 @@ namespace Locally.Models
                     .WithMany(p => p.ServicePreApprovedUser)
                     .HasForeignKey(d => d.PreApprovedUserId)
                     .HasConstraintName("Service_User_2");
-
-                entity.HasOne(d => d.Review)
-                    .WithMany(p => p.Service)
-                    .HasForeignKey(d => d.ReviewId)
-                    .HasConstraintName("Service_Review");
 
                 entity.HasOne(d => d.UserContractorNavigation)
                     .WithMany(p => p.ServiceUserContractorNavigation)
@@ -283,7 +287,7 @@ namespace Locally.Models
 
                 entity.Property(e => e.Description)
                     .IsRequired()
-                    .HasMaxLength(1);
+                    .HasMaxLength(1024);
             });
 
             modelBuilder.Entity<User>(entity =>
@@ -294,11 +298,11 @@ namespace Locally.Models
 
                 entity.Property(e => e.Email)
                     .IsRequired()
-                    .HasMaxLength(1);
+                    .HasMaxLength(1024);
 
                 entity.Property(e => e.Password)
                     .IsRequired()
-                    .HasMaxLength(1);
+                    .HasMaxLength(1024);
             });
 
             OnModelCreatingPartial(modelBuilder);

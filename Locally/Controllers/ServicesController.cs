@@ -22,9 +22,9 @@ namespace Locally.Controllers
 
         // GET: api/Services
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Service>>> GetService()
+        public ActionResult<IEnumerable<Service>> GetService(float LocationX, float LocationY)
         {
-            return await _context.Service.ToListAsync();
+            return Ok(_context.Service.ToList().OrderBy(service => new { V = distance(LocationX, LocationY, service.LocationX, service.LocationY, 'K') }));
         }
 
         // GET: api/Services/5
@@ -116,25 +116,51 @@ namespace Locally.Controllers
         }
 
         [HttpPatch("{id}")]
-        public async Task<IActionResult> PatchService(int id)
+        public async Task<IActionResult> PatchService(int id, int userId, int toApprove)
         {
+
             var service = await _context.Service.FindAsync(id);
+
+            if ((service).PreApprovedUserId == null && (service).UserOwner == userId)
+            {
+                service.PreApprovedUserId = toApprove;
+            }
+            if ((service).PreApprovedUserId != null && (service).UserOwner != userId)
+            {
+                service.UserContractor = userId;
+            }
             if (service == null)
             {
                 return NotFound();
             }
+            _context.Entry(service).State = EntityState.Modified;
 
-            _context.Service.Remove(service);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ReviewExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
-            return null;
+            return NoContent();
+
+
         }
 
 
         [HttpGet("{id}/review")]
         public async Task<ActionResult<Review>> GetReview(int id)
         {
-            var review = await _context.Review.FindAsync(id);
+            var review = await _context.Review.Where(review => review.ServiceId == id).FirstAsync();
 
             if (review == null)
             {
@@ -199,7 +225,7 @@ namespace Locally.Controllers
         [HttpGet("{id}/messages")]
         public async Task<ActionResult<IEnumerable<Message>>> GetMessages(int id)
         {
-            return await _context.Message.Where(x => x.Service.Id == id).ToListAsync();
+            return await _context.Message.Where(x => x.ServiceId == id).ToListAsync();
         }
         [HttpPost("{id}/messages")]
         public async Task<ActionResult<Message>> PostMessage(Message message)
@@ -238,6 +264,37 @@ namespace Locally.Controllers
         private bool MessageExists(int id)
         {
             return _context.Message.Any(e => e.Id == id);
+        }
+        private double distance(float lat1, float lon1, float lat2, float lon2, char unit)
+        {
+            float theta = lon1 - lon2;
+            float dist = (float)(Math.Sin(deg2rad(lat1)) * Math.Sin(deg2rad(lat2)) + Math.Cos(deg2rad(lat1)) * Math.Cos(deg2rad(lat2)) * Math.Cos(deg2rad(theta)));
+            dist = (float)Math.Acos(dist);
+            dist = rad2deg(dist);
+            dist = (float)(dist * 60 * 1.1515);
+
+            if (unit == 'K')
+            {
+                dist = (float)(dist * 1.609344);
+            }
+            else if (unit == 'N')
+            {
+                dist = (float)(dist * 0.8684);
+            }
+
+            return (dist);
+
+        }
+        private float deg2rad(float deg)
+        {
+
+            return (float)(deg * Math.PI / 180.0);
+
+        }
+        private float rad2deg(float rad)
+        {
+
+            return (float)(rad / Math.PI * 180.0);
         }
     }
 
