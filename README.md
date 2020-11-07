@@ -1,4 +1,4 @@
-#Locally
+# Locally
 
 Nie ma kto wyprowadzić psa podczas twojej nieobecności w domu? A być może potrzebujesz pomocy z dostarczeniem zakupów do domu.
 Locally to idealne miejsce dla ciebie. Szybko, łatwo i bezproblemowo znajdziesz osoby chętne do pomocy w każdej sprawie za symboliczną kwotę.
@@ -10,9 +10,16 @@ Oprócz tego sam możesz odpowiedzieć na interesujące cie ogłoszenia a tym sa
 
 ## Technologies
 Projekt został utworzony w technologiach:
+
 • C#
+
 • Bootstrap 4
+
 • Angular 10
+
 • HTML
+
 • CSS
+
 • MS-SQL
+
