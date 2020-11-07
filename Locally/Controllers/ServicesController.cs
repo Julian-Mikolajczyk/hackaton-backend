@@ -24,7 +24,7 @@ namespace Locally.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Service>> GetService(float LocationX, float LocationY)
         {
-            return Ok(_context.Service.ToList().OrderBy(service => new { V = distance(LocationX, LocationY, service.LocationX, service.LocationY, 'K') }));
+            return Ok(_context.Service.ToList().OrderBy(service => /*new { V = */distance(LocationX, LocationY, service.LocationX, service.LocationY, 'K') /*}*/));
         }
 
         // GET: api/Services/5

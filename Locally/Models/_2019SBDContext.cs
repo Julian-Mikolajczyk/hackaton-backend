@@ -37,7 +37,7 @@ namespace Locally.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("Relational:DefaultSchema", "s18734");
+            modelBuilder.HasAnnotation("Relational:DefaultSchema", "s19062");
 
             modelBuilder.Entity<Message>(entity =>
             {
