@@ -11,11 +11,13 @@ Oprócz tego sam możesz odpowiedzieć na interesujące cie ogłoszenia a tym sa
 ## Technologies
 Projekt został utworzony w technologiach:
 
-• C#
+• C#, .NET Core 
 
-• Bootstrap 4
+• TypeScript
 
 • Angular 10
+
+• Bootstrap 4
 
 • HTML
 
